@@ -1,16 +1,20 @@
 # DATABASE MODEL
-- [ ] User
-- [ ] Container
-
-# User
-- [ ] name
-- [ ] password
+- [x] Container
+- [ ] Items
 
 # Container
+- [x] id
+- [x] container name
+- [x] container color
+- [x] CRUD
+
+# Items
+- [ ] connected container id
 - [ ] id
 - [ ] item name
+- [ ] item description
+- [ ] CRUD
 
 # FRONTEND
-- [ ] list of users
-  - [ ] for each user show list of containers
-    - [ ] for each container show list of items
+- [x] list of containers (CRUD)
+  - [ ] for each container show list of items (CRUD)
