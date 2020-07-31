@@ -4,6 +4,7 @@ const router = Router();
 /* require model */
 const Container = require('../models/Container');
 
+// get all
 router.get('/', async (req, res) => {
   try {
     const containers = await Container.find();
@@ -13,24 +14,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/find', (req, res, next) => {
+// find one
+router.get('/:id', async (req, res, next) => {
   try {
-    const {name} = req.body;
-    const query = Container.where({ name: name });
-    query.findOne((err, users) => {
-      if(err) next(err);
-      if(users) {
-        res.json({status: 200})
-      } else {
-        res.json({status: 404})
-      }
-    })
+    const {id} = req.params;
+    const container = await Container.findOne({
+      _id: id,
+    });
+    res.json(container);
   } catch (error) {
     next(error);
   }
 })
 
-router.post('/add', async (req, res, next) => {
+// save
+router.post('/', async (req, res, next) => {
   try {
     const containers = new Container(req.body);
     const createdContainer = await containers.save();
@@ -43,9 +41,10 @@ router.post('/add', async (req, res, next) => {
   }
 });
 
-router.post('/delete', async (req, res, next) => {
+// delete
+router.delete('/:id', async (req, res, next) => {
   try {
-    const {id} = req.body;
+    const {id} = req.params;
     await Container.findByIdAndDelete(id);
     res.json({status: 200, message: 'Deleted succesfully'});
   } catch (error) {
@@ -53,11 +52,17 @@ router.post('/delete', async (req, res, next) => {
   }
 });
 
-router.post('/edit', async (req, res, next) => {
+// edit
+router.put('/:id', async (req, res, next) => {
   try {
-    const {id, name, color} = req.body;
-    await Container.findByIdAndUpdate(id, { name: name, color: color });
-    res.json({status: 200, message: 'Updated succesfully'});
+    const {id} = req.params;
+    await Container.findOne({
+      _id: id,
+    }, (error) => {
+      if(error) next(error);
+    });
+    await Container.update({_id:id}, req.body);
+    res.json({status: 200, message: 'Updated succesfully'})
   } catch (error) {
     next(error);
   }
