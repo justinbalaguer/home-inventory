@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container,Button,Table,Form} from 'react-bootstrap';
 
-const API_CONTAINER_URL = 'http://localhost:5000/api/containers';
+const API_CONTAINER_URL = 'http://localhost:5000/api/containers/';
 
 const App = () => {
   const [containers, setContainers] = useState([]);
@@ -43,18 +43,34 @@ const App = () => {
     setContainerInfo({...containerInfo, [name]: value});
   }
 
-  const save = async(action) => {
+  const save = async() => {
     const id = containerInfo.id;
     const name = containerInfo.name;
     const color = containerInfo.color;
-    const response = await axios.post(`${API_CONTAINER_URL}/${action}`,{
+    const action = containerInfo.action;
+    let obj = {
       id: id,
       name: name,
       color: color
-    });
-    if(response.status===200) {
-      getContainers();
-      setContainerInputs({hidden: true, action: ''});
+    };
+    if(action==='put') {
+      const response = await axios.put(`${API_CONTAINER_URL}${id}`, obj);
+      if(response.status===200) {
+        getContainers();
+        setContainerInputs({hidden: true, action: ''});
+      }
+    } else if(action==='delete') {
+      const response = await axios.delete(`${API_CONTAINER_URL}${id}`, obj);
+      if(response.status===200) {
+        getContainers();
+        setContainerInputs({hidden: true, action: ''});
+      }
+    } else {
+      const response = await axios.post(`${API_CONTAINER_URL}`, obj);
+      if(response.status===200) {
+        getContainers();
+        setContainerInputs({hidden: true, action: ''});
+      }
     }
   }
 
@@ -64,6 +80,7 @@ const App = () => {
     setSearchKeyword(keyword);
   }
 
+  // eslint-disable-next-line
   const containerData = containers.filter((data) => {
     if(searchKeyword === '') {
       return data;
@@ -75,7 +92,7 @@ const App = () => {
       <tr key={i}>
         <td><Button type='button' block onClick={() => view(data._id)}>{data.name}</Button></td>
         <td>{data.color}</td>
-        <td><Button type='button' variant='secondary' block onClick={() => handleAction(data._id,data.name,data.color,'edit')}>Edit</Button></td>
+        <td><Button type='button' variant='secondary' block onClick={() => handleAction(data._id,data.name,data.color,'put')}>Edit</Button></td>
         <td><Button type='button' variant='danger' block onClick={() => handleAction(data._id,'','','delete')}>Delete</Button></td>
       </tr>
     )
@@ -104,18 +121,25 @@ const App = () => {
     {/* Edit Form */}
     {containerInputs.hidden === false && (
       <Form>
-        <Form.Group>
-        <Form.Control type='text' id='id' name='id' onChange={inputChange} value={id} hidden={true} />
-          <Form.Label htmlFor='name'>Name</Form.Label>
-          <Form.Control type='text' id='name' name='name' onChange={inputChange} value={name} />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label htmlFor='color'>Color</Form.Label>
-          <Form.Control type='text' id='color' name='color' onChange={inputChange} value={color} />
-        </Form.Group>
+        {containerInfo.action!=='delete' && (
+          <>
+          <Form.Group className>
+          <Form.Control type='text' id='id' name='id' onChange={inputChange} value={id} hidden={true} />
+            <Form.Label htmlFor='name'>Name</Form.Label>
+            <Form.Control type='text' id='name' name='name' onChange={inputChange} value={name} />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label htmlFor='color'>Color</Form.Label>
+            <Form.Control type='text' id='color' name='color' onChange={inputChange} value={color} />
+          </Form.Group>
+          </>
+        )}
         <Form.Group>
           {containerInfo.action==='delete' && (<p>Are you sure you want to delete?</p>)}
           <Button type='button' onClick={() => save(containerInputs.action)} >{containerInfo.action==='delete' ? ('Yes') : ('Save')}</Button>
+          {containerInfo.action==='delete' && (
+            <Button type='button' variant='danger' onClick={() => {setContainerInputs(true)}}>No</Button>
+          )}
         </Form.Group>
       </Form>
     )}
