@@ -1,6 +1,6 @@
 # DATABASE MODEL
 - [x] Container
-- [ ] Items
+- [x] Items
 
 # Container
 - [x] id
@@ -9,11 +9,11 @@
 - [x] CRUD
 
 # Items
-- [ ] connected container id
-- [ ] id
-- [ ] item name
-- [ ] item description
-- [ ] CRUD
+- [x] connected container id
+- [x] id
+- [x] item name
+- [x] item description
+- [x] CRUD
 
 # FRONTEND
 - [x] list of containers (CRUD)
