@@ -74,7 +74,8 @@ router.put('/:id', async (req, res, next) => {
 // get all
 router.get('/:id/items', async (req, res, next) => {
   try {
-    const items = await Item.find();
+    const {id} = req.params;
+    const items = await Item.find({container_id:id}, (error) => {if(error) next(error)});
     res.json(items);
   } catch (error) {
     next(error);
