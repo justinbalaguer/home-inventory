@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container,Button,Table,Form} from 'react-bootstrap';
+import './styles/index.scss';
 
 const API_CONTAINER_URL = 'http://localhost:5000/api/containers/';
 
@@ -101,23 +102,25 @@ const App = () => {
   return (
     <Container className="App">
     <h1 className='text-center'>Home Inventory</h1>
-    <div>
-     <Form.Control type='text' onChange={search} />
-     <br/>
+    <div className={`containers ${containerInputs.hidden === false && 'hidden'}`}>
+      <div>
+      <Form.Control type='text' onChange={search} />
+      <br/>
+      </div>
+      <Button type='button' variant='success' block onClick={() => handleAction('','','','add')}>Add</Button>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>Container</th>
+            <th>Color</th>
+            <th colSpan={2}>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {containerData}
+        </tbody>
+      </Table>
     </div>
-    <Button type='button' variant='success' block onClick={() => handleAction('','','','add')}>Add</Button>
-    <Table striped bordered hover responsive>
-      <thead>
-        <tr>
-          <th>Container</th>
-          <th>Color</th>
-          <th colSpan={2}>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {containerData}
-      </tbody>
-    </Table>
     {/* Edit Form */}
     {containerInputs.hidden === false && (
       <Form>
@@ -137,9 +140,7 @@ const App = () => {
         <Form.Group>
           {containerInfo.action==='delete' && (<p>Are you sure you want to delete?</p>)}
           <Button type='button' onClick={() => save(containerInputs.action)} >{containerInfo.action==='delete' ? ('Yes') : ('Save')}</Button>
-          {containerInfo.action==='delete' && (
-            <Button type='button' variant='danger' onClick={() => {setContainerInputs(true)}}>No</Button>
-          )}
+          <Button type='button' variant='danger' onClick={() => {setContainerInputs(true)}}>{containerInfo.action==='delete' ? ('No') : ('Cancel')}</Button>
         </Form.Group>
       </Form>
     )}
