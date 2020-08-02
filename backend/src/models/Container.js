@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const containerSchema = new Schema({
   name: {type: String, required: true, unique: true},
-  color: String
+  description: String
 }, {
   timestamps: true,
 });

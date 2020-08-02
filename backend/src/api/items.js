@@ -2,15 +2,14 @@ const {Router} = require('express');
 const router = Router();
 
 /* require model */
-const Container = require('../models/Container');
 const Item = require('../models/Item');
 
 // get all
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
-    const containers = await Container.find();
-    res.json(containers);
-  } catch(error) {
+    const items = await Item.find();
+    res.json(items);
+  } catch (error) {
     next(error);
   }
 });
@@ -19,10 +18,10 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const {id} = req.params;
-    const container = await Container.findOne({
+    const item = await Item.findOne({
       _id: id,
     });
-    res.json(container);
+    res.json(item);
   } catch (error) {
     next(error);
   }
@@ -31,9 +30,9 @@ router.get('/:id', async (req, res, next) => {
 // save
 router.post('/', async (req, res, next) => {
   try {
-    const containers = new Container(req.body);
-    const createdContainer = await containers.save();
-    res.json(createdContainer);
+    const items = new Item(req.body);
+    const createdItem = await items.save();
+    res.json(createdItem);
   } catch (error) {
     if(error.name === 'ValidationError') {
       res.status(422);
@@ -46,7 +45,7 @@ router.post('/', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const {id} = req.params;
-    await Container.findByIdAndDelete(id);
+    await Item.findByIdAndDelete(id);
     res.json({status: 200, message: 'Deleted succesfully'});
   } catch (error) {
     next(error);
@@ -57,12 +56,12 @@ router.delete('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const {id} = req.params;
-    await Container.findOne({
+    await Item.findOne({
       _id: id,
     }, (error) => {
       if(error) next(error);
     });
-    await Container.update({_id:id}, req.body);
+    await Item.update({_id:id}, req.body);
     res.json({status: 200, message: 'Updated succesfully'})
   } catch (error) {
     next(error);

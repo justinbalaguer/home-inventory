@@ -8,6 +8,7 @@ const {notFound, errorHandler} = require('./middlewares'); /* error handlers */
 
 /* routes */
 const containers = require('./api/containers');
+const items = require('./api/items');
 
 require('dotenv').config();
 
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/containers', containers);
+app.use('/api/items', items);
 
 /* error handler */
 app.use(notFound);
