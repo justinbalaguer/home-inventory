@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose'); /* mongoose */
 const cors = require('cors'); /* cors */
-const morgan = require('morgan'); /* logging */
+// const morgan = require('morgan'); /* logging */
 const helmet = require('helmet'); /* basic protection */
 const {notFound, errorHandler} = require('./middlewares'); /* error handlers */
 
@@ -13,7 +13,7 @@ const items = require('./api/items');
 require('dotenv').config();
 
 app.use(cors());
-app.use(morgan('common'));
+// app.use(morgan('common'));
 app.use(helmet());
 app.use(express.json());
 
