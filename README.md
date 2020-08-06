@@ -17,4 +17,4 @@
 
 # FRONTEND
 - [x] list of containers (CRUD)
-  - [ ] for each container show list of items (CRUD)
+  - [x] for each container show list of items (CRUD)
