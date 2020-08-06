@@ -14,6 +14,18 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/container/:id', async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const items = await Item.find({
+      container_id: id
+    });
+    res.json(items);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // find one
 router.get('/:id', async (req, res, next) => {
   try {
